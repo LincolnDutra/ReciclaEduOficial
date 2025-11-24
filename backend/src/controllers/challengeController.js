@@ -1,5 +1,5 @@
 // backend/src/controllers/challengeController.js
-const pool = require('../config/database'); // Certifique-se de que o caminho está correto
+const pool = require('../config/database');
 
 exports.completeChallenge = async (req, res) => {
     // Idealmente, você verificaria se o desafio existe e se o usuário tem permissão
@@ -14,7 +14,7 @@ exports.completeChallenge = async (req, res) => {
         `;
         await pool.query(sql, [usuario_id, desafio_id, pontos_ganhos]);
 
-        // Busca o novo total de pontos e nível (opcional, mas bom para feedback ao front-end)
+        // Busca o novo total de pontos e nível.
         const userResult = await pool.query('SELECT pontos, nivel FROM usuarios WHERE id = $1', [usuario_id]);
         
         res.status(201).json({ 

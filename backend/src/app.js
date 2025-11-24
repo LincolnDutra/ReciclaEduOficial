@@ -7,7 +7,7 @@ const userRoutes = require('./routes/users');
 const gamificationRoutes = require('./routes/gamification');
 const app = express();
 
-// 💡 CONFIGURAÇÃO CORS EXPLÍCITA
+// CONFIGURAÇÃO CORS 
 const corsOptions = {
     // Permite apenas o acesso da porta onde o React está rodando
     origin: 'http://localhost:3001', 

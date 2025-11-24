@@ -2,14 +2,13 @@
 
 const bcrypt = require('bcryptjs'); // Assumindo 'bcryptjs' (ou use 'bcrypt')
 const jwt = require('jsonwebtoken');
-const pool = require('../config/database'); // 💡 Garanta que este caminho (config/database) aponte para o seu pool 'pg'
+const pool = require('../config/database'); 
 
 exports.register = async (req, res) => {
     try {
         // Recebe os dados do front-end
         const { name, email, password } = req.body; 
         
-        // 💡 Solução para o erro NOT NULL: Define o tipo de usuário como 'aluno' (ou obtenha do front-end/validação)
         const tipo_usuario = 'aluno'; 
 
         // 1. Verificar se o usuário existe (Query SQL)
@@ -36,7 +35,6 @@ exports.register = async (req, res) => {
 
         res.status(201).json({ id: user.id, email: user.email, nome: user.nome });
     } catch (err) {
-        // Código 23505 é a violação de 'UNIQUE' (email duplicado) no Postgres
         if (err.code === '23505') { 
             return res.status(400).json({ error: 'Email já cadastrado' });
         }
@@ -57,13 +55,13 @@ exports.login = async (req, res) => {
         if (!user) return res.status(400).json({ error: 'Credenciais inválidas' });
         
         // 2. Comparar a senha
-        // 💡 Sua coluna no DB é 'senha'
+        // Sua coluna no DB é 'senha'
         const ok = await bcrypt.compare(password, user.senha); 
         if (!ok) return res.status(400).json({ error: 'Credenciais inválidas' });
         
         // 3. Gerar o Token
         const token = jwt.sign(
-            { id: user.id, role: user.tipo_usuario }, // 💡 O 'role' é sua coluna 'tipo_usuario'
+            { id: user.id, role: user.tipo_usuario }, 
             process.env.JWT_SECRET, 
             { expiresIn: '7d' }
         );

@@ -7,12 +7,10 @@ const PORT = process.env.PORT || 4000;
 
 (async () => {
   try {
-    // 💡 SUBSTITUIR o Sequelize pela verificação do pool 'pg'
     // A função pool.connect tenta estabelecer a conexão
     await pool.connect() 
     console.log('✅ Conectado ao Postgres');
-    // REMOVIDO: await sequelize.sync(); (Sua estrutura já foi criada via script SQL)
-    
+        
     app.listen(PORT, () => console.log(`Server rodando na porta ${PORT}`));
   } catch (err) {
     console.error('❌ Erro ao iniciar servidor ou conectar ao DB:', err);

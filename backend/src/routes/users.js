@@ -1,1 +1,6 @@
-const express = require('express'); const router = express.Router(); const userController = require('../controllers/userController'); router.get('/', userController.list); router.get('/:id', userController.getById); router.post('/:id/add-points', userController.addPoints); module.exports = router;
+const express = require('express'); 
+const router = express.Router(); 
+const userController = require('../controllers/userController'); 
+router.get('/', userController.list); 
+router.get('/:id', userController.getById); 
+router.post('/:id/add-points', userController.addPoints); module.exports = router;

@@ -18,7 +18,7 @@ export default function Home() {
 
         {/* Caixa branca com título — você pode remover se quiser */}
         <div style={styles.loginBox}>
-          <h2 style={{ color: "var(--primary-dark)" }}>Login</h2>
+          <h2 style={{ color: "var(--primary-dark)" }}>Vamos Começar!</h2>
         </div>
       </div>
     </>
