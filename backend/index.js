@@ -1,16 +1,22 @@
-require('dotenv').config();
-const app = require('./src/app');
-const sequelize  = require('./src/config/db');
-const PORT = process.env.PORT || 4000;
+import express from "express";
+import dotenv from "dotenv";
+import sequelize from "./src/config/db.js";
 
-// (async () => {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Conectado ao Postgres');
-//     await sequelize.sync();
-//     app.listen(PORT, () => console.log(`Server rodando na porta ${PORT}`));
-//   } catch (err) {
-//     console.error('Erro ao iniciar servidor:', err);
-//     process.exit(1);
-//   }
-// })();
+dotenv.config();
+
+const app = express();
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("API ReciclaEdu rodando...");
+});
+
+// Testa conexão com banco
+sequelize.authenticate()
+  .then(() => console.log("Conectado ao MySQL com sucesso!"))
+  .catch(err => console.error("Erro ao conectar ao banco:", err));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
