@@ -1,30 +1,61 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import Usuario from "../models/Usuario.js";
 
-exports.register = async (req, res) => {
+// REGISTRO DE USUÁRIO
+export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const exists = await User.findOne({ where: { email } });
-    if (exists) return res.status(400).json({ error: 'Email já cadastrado' });
+    const { nome, email, password, tipo_usuario } = req.body;
+
+    // Verifica se o email já existe
+    const existe = await Usuario.findOne({ where: { email } });
+    if (existe) return res.status(400).json({ error: "Email já cadastrado" });
+
+    // Criptografa a senha
     const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, passwordHash: hash });
-    res.json({ id: user.id, email: user.email });
+
+    // Cria o usuário
+    const novoUsuario = await Usuario.create({
+      nome,
+      email,
+      password: hash, // campo agora existe no banco
+      tipo_usuario,
+    });
+
+    return res.status(201).json({ message: "Cadastro realizado com sucesso" });
   } catch (err) {
+    console.error("🔥 ERRO NO REGISTER:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-exports.login = async (req, res) => {
+// LOGIN DE USUÁRIO
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ error: 'Credenciais inválidas' });
-    const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) return res.status(400).json({ error: 'Credenciais inválidas' });
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token });
+
+    // Encontra o usuário
+    const usuario = await Usuario.findOne({ where: { email } });
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    // Verifica a senha
+    const senhaCorreta = await bcrypt.compare(password, usuario.password);
+    if (!senhaCorreta) {
+      return res.status(400).json({ error: "Senha incorreta" });
+    }
+
+    // Gera token JWT
+    const token = jwt.sign(
+      { id: usuario.id, tipo_usuario: usuario.tipo_usuario },
+      "secreta123",
+      { expiresIn: "1d" }
+    );
+
+    res.json({ token, usuario });
   } catch (err) {
+    console.error("🔥 ERRO NO LOGIN:", err);
     res.status(500).json({ error: err.message });
   }
 };

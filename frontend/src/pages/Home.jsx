@@ -1,1 +1,28 @@
-import React,{useState}from'react';import api from'../api/api';export default function Home(){const[email,setEmail]=useState('');const[password,setPassword]=useState('');const login=async()=>{try{const res=await api.post('/auth/login',{email,password});localStorage.setItem('token',res.data.token);window.location.href='/dashboard';}catch(err){alert('Erro ao logar');}};return(<div style={{padding:20}}><h1>ReciclaEdu</h1><input placeholder='email' value={email} onChange={e=>setEmail(e.target.value)}/><br/><input placeholder='senha' type='password' value={password} onChange={e=>setPassword(e.target.value)}/><br/><button onClick={login}>Entrar</button></div>);}
+import React, { useState } from "react";
+import api from "../api/api";
+
+export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    try {
+      const res = await api.post("/auth/login", { email, password });
+      localStorage.setItem("token", res.data.token);
+      // redireciona
+      window.location.href = "/dashboard";
+    } catch (err) {
+      const msg = err.response?.data?.error || "Erro ao logar";
+      alert(msg);
+    }
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h1>ReciclaEdu</h1>
+      <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} /><br/>
+      <input placeholder="senha" type="password" value={password} onChange={e => setPassword(e.target.value)} /><br/>
+      <button onClick={login}>Entrar</button>
+    </div>
+  );
+}

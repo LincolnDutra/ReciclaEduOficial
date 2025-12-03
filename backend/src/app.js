@@ -1,11 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.get('/', (req, res) => res.json({ ok: true, project: 'ReciclaEdu' }));
-module.exports = app;
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.get("/", (req, res) => res.json({ ok: true, project: "ReciclaEdu" }));
+
+export default app;
